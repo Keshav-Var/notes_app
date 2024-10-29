@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:notes_app/features/presentation/widgets/snake_bar.dart';
+import 'package:notes_app/features/bussiness/entities/note_entity.dart';
+import 'package:notes_app/features/presentation/provider/note_provider.dart';
+import 'package:notes_app/features/presentation/widgets/snake_bar.dart';
+import 'package:provider/provider.dart';
 
 class Addnote extends StatefulWidget {
-  const Addnote({super.key});
+  final String uid;
+  const Addnote({super.key, required this.uid});
 
   @override
   State<Addnote> createState() => _AddnoteState();
@@ -11,7 +16,7 @@ class Addnote extends StatefulWidget {
 
 class _AddnoteState extends State<Addnote> {
   TextEditingController noteTextController = TextEditingController();
-  ScaffoldMessengerState scaffoldStateKey = ScaffoldMessengerState();
+  GlobalKey scaffoldStateKey = GlobalKey();
 
   @override
   void initState() {
@@ -30,6 +35,7 @@ class _AddnoteState extends State<Addnote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldStateKey,
       appBar: AppBar(
         title: const Text("Note"),
       ),
@@ -77,18 +83,26 @@ class _AddnoteState extends State<Addnote> {
   }
 
   void _submitNewNote() {
-    // if (noteTextController.text.isEmpty) {
-    //   snackBarError(scaffoldState: scaffoldStateKey, msg: "type something");
-    //   return;
-    // }
-    // // BlocProvider.of<NoteCubit>(context).addNote(note: NoteEntity(
-    // //   note: _noteTextController.text,
-    // //   time: Timestamp.now(),
-    // //   uid: widget.uid,
-    // // ),);
+    if (noteTextController.text.isEmpty) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar("type something"));
+      return;
+    }
 
-    // Future.delayed(const Duration(seconds: 1), () {
-    //   Navigator.pop(context);
-    // });
+    Provider.of<NoteProvider>(context, listen: false).addNote(
+      NoteEntity(
+        uid: widget.uid,
+        note: noteTextController.text,
+        time: Timestamp.now(),
+      ),
+    );
+    Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
   }
 }

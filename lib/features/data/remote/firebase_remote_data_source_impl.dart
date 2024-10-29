@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notes_app/features/bussiness/entities/note_entity.dart';
@@ -34,12 +32,13 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
       if (!noteSnapshot.exists) {
         await noteCollectionRef.doc(noteId).set(newNote);
-      } else {
-        printToConsole("\n note already exists\n");
       }
+      //else {
+      //   print("\n note already exists\n");
+      // }
       return;
     } catch (e) {
-      printToConsole("\nexception in addNote function\n");
+      // print("\nexception in addNote function\n");
       return;
     }
   }
@@ -56,7 +55,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       }
       return;
     } catch (e) {
-      printToConsole(e.toString());
+      // print(e.toString());
     }
     return;
   }
@@ -85,11 +84,11 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       if (!userDoc.exists) {
         await userCollectionRef.doc(uid).set(newUser);
       } else {
-        printToConsole('User already exists');
+        // print('User already exists');
       }
     } catch (e) {
       // Handle any errors that occur during Firestore operations
-      printToConsole('Error creating or retrieving user: $e');
+      // print('Error creating or retrieving user: $e');
     }
   }
 

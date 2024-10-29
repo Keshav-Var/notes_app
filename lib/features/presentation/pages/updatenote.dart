@@ -1,21 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:notes_app/features/presentation/widgets/snake_bar.dart';
+import 'package:notes_app/features/bussiness/entities/note_entity.dart';
+import 'package:notes_app/features/presentation/provider/note_provider.dart';
+import 'package:notes_app/features/presentation/widgets/snake_bar.dart';
+import 'package:provider/provider.dart';
 
 class Updatenote extends StatefulWidget {
-  const Updatenote({super.key});
+  final int index;
+  final NoteEntity note;
+  const Updatenote({
+    super.key,
+    required this.index,
+    required this.note,
+  });
 
   @override
   State<Updatenote> createState() => _UpdatenoteState();
 }
 
 class _UpdatenoteState extends State<Updatenote> {
-  TextEditingController noteTextController = TextEditingController();
+  TextEditingController? noteTextController;
   ScaffoldMessengerState scaffoldStateKey = ScaffoldMessengerState();
 
   @override
   void initState() {
-    noteTextController.addListener(() {
+    noteTextController = TextEditingController(text: widget.note.note);
+    noteTextController?.addListener(() {
       setState(() {});
     });
     super.initState();
@@ -23,7 +34,7 @@ class _UpdatenoteState extends State<Updatenote> {
 
   @override
   void dispose() {
-    noteTextController.dispose();
+    noteTextController?.dispose();
     super.dispose();
   }
 
@@ -39,7 +50,7 @@ class _UpdatenoteState extends State<Updatenote> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${DateFormat("dd MMM hh:mm a").format(DateTime.now())} | ${noteTextController.text.length} Characters",
+              "${DateFormat("dd MMM hh:mm a").format(DateTime.now())} | ${noteTextController?.text.length} Characters",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black.withValues(alpha: .5),
@@ -51,12 +62,14 @@ class _UpdatenoteState extends State<Updatenote> {
                   controller: noteTextController,
                   maxLines: null,
                   decoration: const InputDecoration(
-                      border: InputBorder.none, hintText: "start typing..."),
+                    border: InputBorder.none,
+                    hintText: "start typing...",
+                  ),
                 ),
               ),
             ),
             InkWell(
-              onTap: _submitNewNote,
+              onTap: _submitUpdatedNote,
               child: Container(
                 height: 45,
                 width: double.infinity,
@@ -76,19 +89,28 @@ class _UpdatenoteState extends State<Updatenote> {
     );
   }
 
-  void _submitNewNote() {
-    // if (noteTextController.text.isEmpty) {
-    //   snackBarError(scaffoldState: scaffoldStateKey, msg: "type something");
-    //   return;
-    // }
-    // // BlocProvider.of<NoteCubit>(context).addNote(note: NoteEntity(
-    // //   note: _noteTextController.text,
-    // //   time: Timestamp.now(),
-    // //   uid: widget.uid,
-    // // ),);
+  void _submitUpdatedNote() {
+    if (noteTextController!.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar("type something"));
+      return;
+    }
 
-    // Future.delayed(const Duration(seconds: 1), () {
-    //   Navigator.pop(context);
-    // });
+    Provider.of<NoteProvider>(context, listen: false).updateNote(
+      NoteEntity(
+        uid: widget.note.uid,
+        note: noteTextController!.text,
+        time: Timestamp.now(),
+        noteId: widget.note.uid,
+      ),
+    );
+
+    Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
   }
 }
