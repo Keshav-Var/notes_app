@@ -100,7 +100,7 @@ class _UpdatenoteState extends State<Updatenote> {
         uid: widget.note.uid,
         note: noteTextController!.text,
         time: Timestamp.now(),
-        noteId: widget.note.uid,
+        noteId: widget.note.noteId,
       ),
     );
 

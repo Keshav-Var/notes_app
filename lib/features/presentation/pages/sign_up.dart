@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/features/bussiness/entities/user_entity.dart';
-import 'package:notes_app/features/presentation/pages/sign_in.dart';
 import 'package:notes_app/features/presentation/provider/authentication_provider.dart';
 import 'package:notes_app/features/presentation/provider/user_provider.dart';
 import 'package:notes_app/features/presentation/widgets/input_text_field.dart';
@@ -170,16 +169,8 @@ class _SignUpState extends State<SignUp> {
               height: 15,
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const SignIn();
-                    },
-                  ),
-                );
-              },
+              onTap: () =>
+                  Provider.of<UserProvider>(context, listen: false).toggle(),
               child: Container(
                 height: 45,
                 alignment: Alignment.center,

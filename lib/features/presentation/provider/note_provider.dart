@@ -73,7 +73,7 @@ class NoteProvider with ChangeNotifier {
       _errorMessage = 'An error occurred.';
     } finally {
       _isLoading = false;
-      notifyListeners();
+      // notifyListeners();
     }
   }
 }

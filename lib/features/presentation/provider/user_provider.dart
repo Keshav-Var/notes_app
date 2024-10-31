@@ -14,42 +14,56 @@ class UserProvider extends ChangeNotifier {
     required this.getCreateCurrentUserUsecase,
     required this.signUpUsecase,
   });
-  bool _isSuceesul = false;
+  bool _isSigninPage = true;
+  bool _isSuceesful = false;
   bool _hasError = false;
   bool _isLoading = false;
   String? errorMsg;
 
-  bool get isSucessful => _isSuceesul;
+  bool get isSigninPage => _isSigninPage;
+  bool get isSucessful => _isSuceesful;
   bool get hasError => _hasError;
   bool get isLoading => _isLoading;
 
   Future<void> submitSignIn({required UserEntity user}) async {
     _isLoading = true;
+    _hasError = false;
+    errorMsg = null;
     try {
       await signInUsecase.call(user);
-      _isSuceesul = true;
-      _isLoading = false;
+      _isSuceesful = true;
     } catch (e) {
-      _isSuceesul = false;
+      _isSuceesful = false;
       _hasError = true;
       errorMsg = e.toString();
+    } finally {
       _isLoading = false;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   Future<void> submitSignUp({required UserEntity user}) async {
     _isLoading = true;
+    _hasError = false;
+    errorMsg = null;
     try {
       await signUpUsecase.call(user);
-      _isSuceesul = true;
+      await getCreateCurrentUserUsecase(user);
+      _isSuceesful = true;
       _isLoading = false;
     } catch (e) {
-      _isSuceesul = false;
+      _isSuceesful = false;
       _hasError = true;
       errorMsg = e.toString();
       _isLoading = false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
+  }
+
+  void toggle() {
+    _isSigninPage = !_isSigninPage;
     notifyListeners();
   }
 }

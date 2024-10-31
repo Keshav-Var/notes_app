@@ -11,15 +11,17 @@ SnackBar Function(String msg) snackBar = (String msg) => SnackBar(
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            width: 180,
+          Expanded(
             child: Text(
               msg,
               style: const TextStyle(fontSize: 14),
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const Icon(FontAwesomeIcons.triangleExclamation)
+          const Icon(
+            FontAwesomeIcons.triangleExclamation,
+            size: 14.0,
+          )
         ],
       ),
     );

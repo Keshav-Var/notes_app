@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_app/features/presentation/pages/home_page.dart';
 import 'package:notes_app/features/presentation/pages/sign_in.dart';
+import 'package:notes_app/features/presentation/pages/sign_up.dart';
 import 'package:notes_app/features/presentation/provider/user_provider.dart';
 import 'package:notes_app/features/presentation/provider/note_provider.dart';
 import 'package:notes_app/features/presentation/provider/authentication_provider.dart';
@@ -51,12 +52,16 @@ class BridgePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthenticationProvider>(
-      builder: (context, authProvider, child) {
+    return Consumer2<AuthenticationProvider, UserProvider>(
+      builder: (context, authProvider, userProvider, child) {
         if (authProvider.isAuthenticated) {
           return const HomePage(); // Replace with your actual home page
         } else if (!authProvider.isAuthenticated) {
-          return const SignIn();
+          if (userProvider.isSigninPage) {
+            return const SignIn();
+          } else {
+            return const SignUp();
+          }
         } else {
           return const Center(
               child:

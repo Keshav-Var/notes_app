@@ -6,8 +6,6 @@ import 'package:notes_app/features/presentation/widgets/input_text_field.dart';
 import 'package:notes_app/features/presentation/widgets/snake_bar.dart';
 import 'package:provider/provider.dart';
 
-import 'sign_up.dart';
-
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
@@ -41,8 +39,7 @@ class _SignInState extends State<SignIn> {
           }
 
           // Navigate to home if sign up is successful
-          if (userProvider.errorMsg == null &&
-              userProvider.isLoading == false) {
+          if (userProvider.isSucessful) {
             Provider.of<AuthenticationProvider>(context, listen: false)
                 .signedIn();
           }
@@ -137,16 +134,8 @@ class _SignInState extends State<SignIn> {
               height: 15,
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const SignUp();
-                    },
-                  ),
-                );
-              },
+              onTap: () =>
+                  Provider.of<UserProvider>(context, listen: false).toggle(),
               child: Container(
                 height: 45,
                 alignment: Alignment.center,
