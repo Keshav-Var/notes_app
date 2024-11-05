@@ -20,7 +20,7 @@ SnackBar Function(String msg) snackBar = (String msg) => SnackBar(
           ),
           const Icon(
             FontAwesomeIcons.triangleExclamation,
-            size: 14.0,
+            size: 18.0,
           )
         ],
       ),

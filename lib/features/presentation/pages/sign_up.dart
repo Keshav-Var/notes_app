@@ -19,7 +19,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
-
+  String error = "";
   @override
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
@@ -34,11 +34,13 @@ class _SignUpState extends State<SignUp> {
 
           // Show error message if there is one
           if (userProvider.errorMsg != null) {
+            error = userProvider.errorMsg!;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(
-                snackBar(userProvider.errorMsg!),
+                snackBar(error),
               );
             });
+            userProvider.reset();
           }
 
           // Navigate to home if sign up is successful

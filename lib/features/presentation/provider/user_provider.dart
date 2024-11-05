@@ -63,7 +63,14 @@ class UserProvider extends ChangeNotifier {
   }
 
   void toggle() {
+    _hasError = false;
+    errorMsg = null;
     _isSigninPage = !_isSigninPage;
     notifyListeners();
+  }
+
+  void reset() {
+    _hasError = false;
+    errorMsg = null;
   }
 }

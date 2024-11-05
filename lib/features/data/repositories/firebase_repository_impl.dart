@@ -18,7 +18,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
       remoteDataSource.getCreateCurrentUser(user);
 
   @override
-  Future<String> getCurrentUid() => remoteDataSource.getCurrentUid();
+  Future<String> getCurrentUid() async =>
+      await remoteDataSource.getCurrentUid();
 
   @override
   Stream<List<NoteEntity>> getNotes(String uid) =>

@@ -21,7 +21,9 @@ class AuthenticationProvider extends ChangeNotifier {
   Future<void> appStarted() async {
     try {
       _isAuthenticated = await isSignInUsecase.call();
-      uid = await getCurrentUid.call();
+      if (_isAuthenticated) {
+        uid = await getCurrentUid.call();
+      }
     } catch (e) {
       _isAuthenticated = false;
     }
@@ -30,8 +32,10 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<void> signedIn() async {
     try {
-      uid = await getCurrentUid.call();
-      _isAuthenticated = true;
+      if (await isSignInUsecase.call()) {
+        uid = await getCurrentUid.call();
+        _isAuthenticated = true;
+      }
       notifyListeners();
     } catch (e) {
       _isAuthenticated = false;
