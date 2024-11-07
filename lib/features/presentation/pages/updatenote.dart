@@ -22,6 +22,7 @@ class Updatenote extends StatefulWidget {
 class _UpdatenoteState extends State<Updatenote> {
   TextEditingController? noteTextController;
   ScaffoldMessengerState scaffoldStateKey = ScaffoldMessengerState();
+  bool isDisabled = false;
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class _UpdatenoteState extends State<Updatenote> {
               ),
             ),
             InkWell(
-              onTap: _submitUpdatedNote,
+              onTap: isDisabled ? null : _submitUpdatedNote,
               child: Container(
                 height: 45,
                 width: double.infinity,
@@ -90,8 +91,14 @@ class _UpdatenoteState extends State<Updatenote> {
   }
 
   void _submitUpdatedNote() {
+    setState(() {
+      isDisabled = true;
+    });
     if (noteTextController!.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(snackBar("type something"));
+      setState(() {
+        isDisabled = false;
+      });
       return;
     }
 

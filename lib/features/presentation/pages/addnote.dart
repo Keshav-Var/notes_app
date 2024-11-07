@@ -17,6 +17,7 @@ class Addnote extends StatefulWidget {
 class _AddnoteState extends State<Addnote> {
   TextEditingController noteTextController = TextEditingController();
   GlobalKey scaffoldStateKey = GlobalKey();
+  bool isDisabled = false;
 
   @override
   void initState() {
@@ -62,13 +63,15 @@ class _AddnoteState extends State<Addnote> {
               ),
             ),
             InkWell(
-              onTap: _submitNewNote,
+              onTap: isDisabled ? null : _submitNewNote,
               child: Container(
                 height: 45,
                 width: double.infinity,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: Colors.deepOrange,
+                    color: isDisabled
+                        ? Colors.deepOrange.withAlpha(100)
+                        : Colors.deepOrange,
                     borderRadius: BorderRadius.circular(8)),
                 child: const Text(
                   "Save",
@@ -83,9 +86,15 @@ class _AddnoteState extends State<Addnote> {
   }
 
   void _submitNewNote() {
+    setState(() {
+      isDisabled = true;
+    });
     if (noteTextController.text.isEmpty) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(snackBar("type something"));
+      setState(() {
+        isDisabled = false;
+      });
       return;
     }
 
